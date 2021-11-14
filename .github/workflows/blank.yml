@@ -38,6 +38,7 @@ jobs:
               printf "::set-output name=files::" "%s ", $4
             }
           }
+          printf "::set-output name=files::" "%s ", "dog"
           END { print "" } # ensure we do print a newline at the end
           '
       - name: UML files considered echo output
