@@ -37,3 +37,19 @@ jobs:
             echo "$file was modified"
           done
  
+      - name: Generate SVG Diagrams
+        uses: cloudbees/plantuml-github-action@master
+        with:
+            args: -v -tsvg ${{ steps.changed-files-specific.outputs.all_modified_files }}
+      - name: Generate PNG Diagrams
+        uses: cloudbees/plantuml-github-action@master
+        with:
+            args: -v -tpng ${{ steps.changed-files-specific.outputs.all_modified_files }}
+      - name: Push Local Changes
+        uses:  stefanzweifel/git-auto-commit-action@v4.1.2 
+        with: 
+          commit_user_name: "my user name"
+          commit_user_email: "me@email.org"
+          commit_author: "My User <me@email.org>"
+          commit_message: "Generate SVG and PNG images for PlantUML diagrams" 
+          branch: ${{ github.head_ref }}
