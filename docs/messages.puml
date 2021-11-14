@@ -13,4 +13,6 @@ GUI -> SC : To control
 SC -> Widget : To entity
 Widget -> Widgets : To database
 
+
+
 @enduml
