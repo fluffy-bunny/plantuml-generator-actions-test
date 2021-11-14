@@ -24,24 +24,16 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Get changed UML files
-        id: getfile
+      - name: Get specific changed files
+        id: changed-files-specific
+        uses: tj-actions/changed-files@v11.5
+        with:
+          files: |
+            **.puml
+            
+      - name: List all modified files
         run: |
-          git diff-tree -r --no-commit-id --summary ${{ github.sha }} \
-          | awk -F' ' '{
-            # ensure we are not trying to process deleted files
-            # only process puml files
-            # do not try to process our theme or custom config
-            if ( $1 !~ /^delete$/ && $4 ~ /\.puml$/ && $4 !~ /(theme|config)\.puml$/ )
-            {
-              # only print the file name and strip newlines for spaces
-              printf "::set-output name=files::" "%s ", $4
-            }
-          }
-          printf "::set-output name=files::" "%s ", "dog"
-          END { print "" } # ensure we do print a newline at the end
-          '
-      - name: UML files considered echo output
-        run: |
-          echo ${{ steps.getfile.outputs.files }}
+          for file in ${{ steps.changed-files-specific.outputs.all_modified_files }}; do
+            echo "$file was modified"
+          done
  
